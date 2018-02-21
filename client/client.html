@@ -90,11 +90,11 @@
     };
 
    //function to send request
-    const requestUpdate2 = (e, userForm) => {
+    const requestUpdate2 = (e, getForm) => {
       
       //grab fields 
-      const url = userForm.querySelector('#urlField').value;
-      const method = userForm.querySelector('#methodSelect').value;
+      const url = "/getChars";
+      const method = "get";
       
       //create a new AJAX request (asynchronous)
       const xhr = new XMLHttpRequest();
@@ -122,16 +122,16 @@
     const init = () => {
       //get the forms
       const charaForm = document.querySelector('#charForm');
-      const userForm = document.querySelector('#userForm');
+      const getForm = document.querySelector('#getForm');
       
       //handle request
       const addChara = (e) => sendPost(e, charaForm);
-      const getUsers = (e) => requestUpdate2(e, userForm);
+      const getChars = (e) => requestUpdate2(e, getForm);
 
       
       //event listeners
       charaForm.addEventListener('submit', addChara);
-      userForm.addEventListener('submit', getUsers);
+      getForm.addEventListener('submit', getChars);
 
     };
     
@@ -151,16 +151,8 @@
       <input type="submit" value="Add Character" />
     </form>
     
-    <form id="userForm" action="/getUsers" method="get">
-      <select id='urlField'>
-        <option value='/getUsers'>/getUsers</option>
-        <option value='/notReal'>/notReal</option>
-      </select>
-      <select id="methodSelect">
-        <option value="get">GET</option>
-        <option value="head">HEAD</option>
-      </select>
-      <input type="submit" value="Get User" />
+    <form id="getForm" action="/getChars" method="get">
+      <input type="submit" value="Refresh Characters" />
     </form>
   </section> 
   

@@ -57,12 +57,8 @@ const onRequest = (request, response) => {
       case '/gimme':
         jsonHandler.getCharacters(request, response);
         break;
-      case '/getUsers':
-        console.log('Get Users get call');
-        jsonHandler.getCharacters(request, response);
-        break;
-      case '/getCharacters':
-        console.log('Attemping get call');
+      case '/getChars':
+        console.log('Get Chars get call');
         jsonHandler.getCharacters(request, response);
         break;
       default:

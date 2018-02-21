@@ -1,6 +1,7 @@
 // characters array
 const characters = {};
 
+
 // json response function
 const respondJSON = (request, response, status, object) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
@@ -18,7 +19,9 @@ const respondJSONMeta = (request, response, status) => {
 };
 
 
+
 // MAJOR
+//retrieve character JSON object
 const getCharacters = (request, response) => {
   console.log('Get Requested');
   const responseJSON = {
@@ -33,6 +36,7 @@ const getCharacters = (request, response) => {
 const getCharactersMeta = (request, response) => respondJSONMeta(request, response, 200);
 
 
+//handle addition or update of information
 const handleCharaInput = (request, response, body) => {
   const responseJSON = {
     message: 'Name and alignment are required fields.',
@@ -63,6 +67,7 @@ const handleCharaInput = (request, response, body) => {
   // 204 does not have an object to deliver, exit
   return respondJSONMeta(request, response, responseCode);
 };
+
 
 
 // STATUS CODES
