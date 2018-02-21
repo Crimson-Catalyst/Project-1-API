@@ -58,7 +58,7 @@ const onRequest = (request, response) => {
         jsonHandler.getCharacters(request, response);
         break;
       case '/getUsers':
-        console.log('are you fucking me');
+        console.log('Get Users get call');
         jsonHandler.getCharacters(request, response);
         break;
       case '/getCharacters':
