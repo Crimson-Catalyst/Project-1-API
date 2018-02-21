@@ -13,8 +13,6 @@ const getIndex = (request, response) => {
 
 // return css
 const getStyles = (request, response) => {
-  console.log('got styles');
-  console.log('got styles');
   response.writeHead(200, { 'Content-Type': 'text/css' });
   response.write(styles);
   response.end();

@@ -54,11 +54,7 @@ const onRequest = (request, response) => {
       case '/styles.css':
         htmlHandler.getStyles(request, response);
         break;
-      case '/gimme':
-        jsonHandler.getCharacters(request, response);
-        break;
       case '/getChars':
-        console.log('Get Chars get call');
         jsonHandler.getCharacters(request, response);
         break;
       default:

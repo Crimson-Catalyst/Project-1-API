@@ -5,7 +5,7 @@
   <link ref="stylesheet" type="text/css" href="/styles.css">
   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
-  <script type="text/babel">
+  <script>
   
     //handle server response
     const handleResponse = (xhr, parseResponse) => {
@@ -46,10 +46,11 @@
         
         //if users
         if(obj.characters) {
-          const userList = document.createElement('p');
-          const users = JSON.stringify(obj.characters);
-          userList.textContent = users;
-          content.appendChild(userList);
+          const charList = document.createElement('p');
+          const chars = JSON.stringify(obj.characters);
+          /*const chars = parseTest(obj.characters);*/
+          charList.textContent = chars;
+          content.appendChild(charList);
         }
       } else {
         console.log('received');
@@ -57,16 +58,36 @@
     };
     
     
+    const parseTest = (characters) => {
+      console.log("parse test");
+      const charStrip = '';
+      
+      Object.keys(characters).forEach(function(key){
+        charStrip = `${charStrip}<div id="chara"><p>${characters[key].name}</p>`;
+        charStrip = `${charStrip} <p>${characters[key].race} ${characters[key].class}</p>`;
+        charStrip = `${charStrip} <p>${characters[key].alignment}</p>`;
+        
+        console.log(`parsed: ${charStrip}`);
+      });
+      
+      return charStrip;
+      
+    };
+    
+    
+    
     //function to send POST
     const sendPost = (e, charForm) => {
       //get action and method
       const formAction = charForm.getAttribute('action');
       const formMethod = charForm.getAttribute('method');
-      console.log("attempting post");
       
       //get the field objects
       const nameField = charForm.querySelector('#nameField');
-      const alignField = charForm.querySelector('#alignField');
+      const raceField = charForm.querySelector('#raceField');
+      const classField = charForm.querySelector('#classField');
+      const alignFieldH = charForm.querySelector('#alignFieldH');
+      const alignFieldV = charForm.querySelector('#alignFieldV');
       
       //AJAX request
       const xhr = new XMLHttpRequest();
@@ -78,8 +99,8 @@
       xhr.onload = () => handleResponse(xhr, true);
       
       //build data
-      const formData = `name=${nameField.value}&alignment=${alignField.value}`;
-      console.log(`sent post name=${nameField.value}&alignment=${alignField.value}`);
+      const formData = `name=${nameField.value}&race=${raceField.value}&class=${classField.value}&alignment=${alignFieldH.value} ${alignFieldV.value}`;
+      console.log(`sent post ${formData}`);
       
       //send request with data
       xhr.send(formData);
@@ -90,7 +111,7 @@
     };
 
    //function to send request
-    const requestUpdate2 = (e, getForm) => {
+    const requestUpdate = (e, getForm) => {
       
       //grab fields 
       const url = "/getChars";
@@ -126,7 +147,7 @@
       
       //handle request
       const addChara = (e) => sendPost(e, charaForm);
-      const getChars = (e) => requestUpdate2(e, getForm);
+      const getChars = (e) => requestUpdate(e, getForm);
 
       
       //event listeners
@@ -140,13 +161,30 @@
   </script>
 </head>
 <body>
-  <section>
+  <div id="wrap">
+  
+  <section id="entry">
     <form id="charForm" action="/addChar" method="post">
       <label for="name">Name: </label>
       <input id="nameField" type="text" name="name" />
       
-      <label for="alignment">Alignment: </label>
-      <input id="alignField" type="text" name="alignment" />
+      <label for="race">Race: </label>
+      <input id="raceField" type="text" name="race" />
+      
+      <label for="class">Class: </label>
+      <input id="classField" type="text" name="class" />
+      
+      <label for="alignmentH">Alignment: </label>
+      <select id="alignFieldH" name="alignmentH">
+        <option value='Lawful'>Lawful</option>
+        <option value='Neutral'>Neutral</option>
+        <option value='Chaotic'>Chaotic</option>
+      </select>
+      <select id="alignFieldV" name="alignmentV">
+        <option value='Good'>Good</option>
+        <option value='Neutral'>Neutral</option>
+        <option value='Evil'>Evil</option>
+      </select>
       
       <input type="submit" value="Add Character" />
     </form>
@@ -160,5 +198,6 @@
   <section id="content">
   </section> 
   
+  </div>
 </body>
 </html>

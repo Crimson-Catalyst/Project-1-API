@@ -7,7 +7,7 @@ const respondJSON = (request, response, status, object) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
 
   response.write(JSON.stringify(object));
-  console.log(`Fetched: ${JSON.stringify(object)}`);
+  // console.log(`Fetched: ${JSON.stringify(object)}`);
   response.end();
 };
 
@@ -19,16 +19,14 @@ const respondJSONMeta = (request, response, status) => {
 };
 
 
-
 // MAJOR
-//retrieve character JSON object
+// retrieve character JSON object
 const getCharacters = (request, response) => {
-  console.log('Get Requested');
   const responseJSON = {
     characters,
   };
 
-  console.log('Fetching characters.');
+  // console.log('Fetching characters.');
 
   return respondJSON(request, response, 200, responseJSON);
 };
@@ -36,7 +34,7 @@ const getCharacters = (request, response) => {
 const getCharactersMeta = (request, response) => respondJSONMeta(request, response, 200);
 
 
-//handle addition or update of information
+// handle addition or update of information
 const handleCharaInput = (request, response, body) => {
   const responseJSON = {
     message: 'Name and alignment are required fields.',
@@ -54,20 +52,20 @@ const handleCharaInput = (request, response, body) => {
 
   // add or update the fields
   characters[body.name].name = body.name;
+  characters[body.name].race = body.race;
+  characters[body.name].class = body.class;
   characters[body.name].alignment = body.alignment;
 
   // upon creation, send success message and exit
   if (responseCode === 201) {
     responseJSON.message = `Created ${characters[body.name].name} successfully`;
     console.log(responseJSON.message);
-    console.log(`Created ${characters[body.name].name}: ${characters[body.name].alignment}`);
     return respondJSON(request, response, responseCode, responseJSON);
   }
 
   // 204 does not have an object to deliver, exit
   return respondJSONMeta(request, response, responseCode);
 };
-
 
 
 // STATUS CODES
