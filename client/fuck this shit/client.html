@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Character Storage</title>
+  <link ref="stylesheet" type="text/css" href="/styles.css">
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script>
+  
+    //handle server response
+    const handleResponse = (xhr, parseResponse) => {
+      const content = document.querySelector('#content');
+      
+      
+      //expecting a body
+      if (parseResponse) {
+        
+        const obj = JSON.parse(xhr.response);
+        console.dir(obj);
+        
+        //if error message, log it
+        if(obj.message) {
+         console.log(`Message: ${obj.message}`); 
+        }
+        
+        //if returning characters
+        if(obj.characters) {
+         const charasList = document.createElement('p');
+          const charas = JSON.stringify(obj.characters);
+          charasList.textContent = charas;
+          content.appendChild(charasList);
+        }
+        
+        
+      } else {
+        console.log('recieved');
+      };
+    };
+    
+    
+    //function to send POST
+    const sendPost = (e, charForm) => {
+      //get action and method
+      const formAction = charForm.getAttribute('action');
+      const formMethod = charForm.getAttribute('method');
+      console.log("attempting post");
+      
+      //get the field objects
+      const nameField = charForm.querySelector('#nameField');
+      const alignField = charForm.querySelector('#alignField');
+      
+      //AJAX request
+      const xhr = new XMLHttpRequest();
+      xhr.open(formMethod, formAction);
+      
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhr.setRequestHeader ('Accept', 'application/json');
+      
+      xhr.onload = () => handleResponse(xhr, true);
+      
+      //build data
+      const formData = `name=${nameField.value}&alignment=${alignField.value}`;
+      console.log(`sent post name=${nameField.value}&alignment=${alignField.value}`);
+      
+      //send request with data
+      xhr.send(formData);
+    
+      //prevent browser default
+      e.preventDefault();
+      return false;      
+    };
+    
+    
+    //function to send GET
+    const requestUpdate = (e, getForm) => {
+      //constants
+      const url= '/getCharacters';
+      console.log("attempting get");
+      
+      //create a new asynchronous AJAX request
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url);
+      xhr.setRequestHeader('Accept', 'application/json');
+      
+      console.log(`sent get to ${url}`);
+      
+      //get
+      xhr.onload = () => handleResponse(xhr, true);
+      
+      //send ajax request
+      xhr.send();
+      //cancel browser default
+      e.preventDefault();
+      return false;
+    };
+    
+  
+   //function to send request
+    const requestUpdate2 = (e, userForm) => {
+      
+      //grab fields 
+      const url = userForm.querySelector('#urlField').value;
+      const method = userForm.querySelector('#methodSelect').value;
+      
+      //create a new AJAX request (asynchronous)
+      const xhr = new XMLHttpRequest();
+      xhr.open(method, url);
+      xhr.setRequestHeader('Accept', 'application/json');
+
+      //check for get or head
+      if(method == 'get') {
+        xhr.onload = () => handleResponse(xhr, true);
+      } else {
+        xhr.onload = () => handleResponse(xhr, false);
+      }
+      
+      //send ajax request
+      xhr.send();
+      
+      //cancel browser default
+      e.preventDefault();
+      return false;
+    };
+  
+  
+  
+    //init
+    const init = () => {
+      //get the forms
+      const charaForm = document.querySelector('#charForm');
+      const getForm = document.querySelector('#getForm');
+      const userForm = document.querySelector('#userForm');
+      
+      //handle request
+      const addChara = (e) => sendPost(e, charaForm);
+      const getChars = (e) => requestUpdate(e, getForm);
+      const getUsers = (e) => requestUpdate2(e, userForm);
+
+      
+      //event listeners
+      charaForm.addEventListener('submit', addChara);
+      getForm.addEventListener('submit', getChars);
+      userForm.addEventListener('submit', getUsers);
+
+    };
+    
+    window.onload = init;
+    
+  </script>
+</head>
+<body>
+  <section>
+    <form id="charForm" action="/addChar" method="post">
+      <label for="name">Name: </label>
+      <input id="nameField" type="text" name="name" />
+      <label for="alignment">Alignment: </label>
+      <input id="alignField" type="text" name="alignment" />
+      <input type="submit" value="Add Character" />
+    </form>
+    
+    <form id="getForm" action="/getChars" method="get">
+      <input type="submit" value="Get Characters" />
+    </form>
+  </section>
+  
+  
+  <form id="userForm" action="/getUsers" method="get">
+      <select id='urlField'>
+        <option value='/getUsers'>/getUsers</option>
+        <option value='/notReal'>/notReal</option>
+      </select>
+      <select id="methodSelect">
+        <option value="get">GET</option>
+        <option value="head">HEAD</option>
+      </select>
+      <input type="submit" value="Get User" />
+    </form>
+  
+  
+  <section id="content">
+  </section> 
+  
+</body>
+</html>
