@@ -3,18 +3,124 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+  
+  background-color: #bada55;
+  color: #003366;
+  font-family: calibri, sans-serif;
 }
 
-#h1 {
+h1 {
   font-size: 2em;
+}
+
+h2 {
+  font-size: 1.3em;
+  margin: 5px 0 10px 0;
+}
+
+#wrap {
+  margin: 0 auto;
+  text-align: center;
+  
+  max-width: 950px;
+  mid-width: 300px;
 }
 
 #entry {
   text-align: center;
-  margin: 0 auto;
+  margin: 20px;
+  padding: 15px;
+  border: 5px dashed #369;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+label {
+ margin-left: 10px 
+}
+
+.infoSection {
+ margin: 15px; 
+}
+
+input {
+ border-radius: 5px; 
+}
+
+input[type=submit] {
+  background-color:#369;
+  color: #c0ffee;
+  font-family: calibri, sans-serif;
+  border-color: #369;
+}
+
+input[type=number] {
+ width: 40px; 
+}
+
+
+#refresh {
+ display: inline-block; 
 }
 
 #content {
   margin-top: 50px;
   text-align: center;
+  backround-color: #fff;
 }
+
+.characterPanel {
+  display: inline-block;
+  text-align: center;
+  margin: 15px;
+  padding: 15px;
+  width: 240px;
+  
+  border: 5px dashed #369;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.port {
+  margin: 0px;
+  padding: 0px;
+  border: 2px dashed #bada55;
+  border-radius: 5px;
+  
+  max-width: 200px;
+  mad-height: 200px;
+}
+
+.info {
+  margin: 0;
+  padding: 0;
+}
+
+.stats {
+  margin: 15px 0 15px 0;
+  padding: 10px 0 0 0;
+  border-top: 2px dashed #bada55;
+}
+
+.stat {
+  display: inline;
+  margin: 0 10px 0 10px;
+  padding: 0;
+  
+}
+
+#consoleStandin{
+ display:none; 
+}
+
+
+
+
+
+
+
+
+
+
+
+

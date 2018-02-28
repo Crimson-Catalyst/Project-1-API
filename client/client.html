@@ -2,169 +2,20 @@
 <html lang="en">
 <head>
   <title>Character Storage</title>
-  <link ref="stylesheet" type="text/css" href="/styles.css">
+  <link rel="stylesheet" type="text/css" href="styles.css">
   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
-  <script>
-  
-    //handle server response
-    const handleResponse = (xhr, parseResponse) => {
-      const content = document.querySelector('#content');
-
-      switch(xhr.status) {
-        case 200: //success
-          content.innerHTML = `<b>Success</b>`;
-          break;
-        case 201: //created content
-          content.innerHTML = '<b>Create</b>';
-          break;
-        case 204: //updated existing content
-          content.innerHTML = '<b>Updated (No Content)</b>';
-          break;
-        case 400: //bad request
-          content.innerHTML = `<b>Bad Request</b>`;
-          break;
-        case 404: //not found
-          content.innerHTML = `<b>Resource Not Found</b>`;
-          break;
-        default: //catchall
-          content.innerHTML = `Error code not implemented by client.`;
-          break;
-      }
-      
-      
-      //expecting a body
-      if(parseResponse) {
-        const obj = JSON.parse(xhr.response);
-        console.dir(obj);
-        
-        if(obj.message) {
-          const p = document.createElement('p');
-          p.textContent = `Message: ${obj.message}`;
-          content.appendChild(p);
-        }
-        
-        //if users
-        if(obj.characters) {
-          const charList = document.createElement('p');
-          const chars = JSON.stringify(obj.characters);
-          /*const chars = parseTest(obj.characters);*/
-          charList.textContent = chars;
-          content.appendChild(charList);
-        }
-      } else {
-        console.log('received');
-      }
-    };
-    
-    
-    const parseTest = (characters) => {
-      console.log("parse test");
-      const charStrip = '';
-      
-      Object.keys(characters).forEach(function(key){
-        charStrip = `${charStrip}<div id="chara"><p>${characters[key].name}</p>`;
-        charStrip = `${charStrip} <p>${characters[key].race} ${characters[key].class}</p>`;
-        charStrip = `${charStrip} <p>${characters[key].alignment}</p>`;
-        
-        console.log(`parsed: ${charStrip}`);
-      });
-      
-      return charStrip;
-      
-    };
-    
-    
-    
-    //function to send POST
-    const sendPost = (e, charForm) => {
-      //get action and method
-      const formAction = charForm.getAttribute('action');
-      const formMethod = charForm.getAttribute('method');
-      
-      //get the field objects
-      const nameField = charForm.querySelector('#nameField');
-      const raceField = charForm.querySelector('#raceField');
-      const classField = charForm.querySelector('#classField');
-      const alignFieldH = charForm.querySelector('#alignFieldH');
-      const alignFieldV = charForm.querySelector('#alignFieldV');
-      
-      //AJAX request
-      const xhr = new XMLHttpRequest();
-      xhr.open(formMethod, formAction);
-      
-      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      xhr.setRequestHeader ('Accept', 'application/json');
-      
-      xhr.onload = () => handleResponse(xhr, true);
-      
-      //build data
-      const formData = `name=${nameField.value}&race=${raceField.value}&class=${classField.value}&alignment=${alignFieldH.value} ${alignFieldV.value}`;
-      console.log(`sent post ${formData}`);
-      
-      //send request with data
-      xhr.send(formData);
-    
-      //prevent browser default
-      e.preventDefault();
-      return false;      
-    };
-
-   //function to send request
-    const requestUpdate = (e, getForm) => {
-      
-      //grab fields 
-      const url = "/getChars";
-      const method = "get";
-      
-      //create a new AJAX request (asynchronous)
-      const xhr = new XMLHttpRequest();
-      xhr.open(method, url);
-      xhr.setRequestHeader('Accept', 'application/json');
-
-      //check for get or head
-      if(method == 'get') {
-        xhr.onload = () => handleResponse(xhr, true);
-      } else {
-        xhr.onload = () => handleResponse(xhr, false);
-      }
-      
-      //send ajax request
-      xhr.send();
-      
-      //cancel browser default
-      e.preventDefault();
-      return false;
-    };
-  
-  
-  
-    //init
-    const init = () => {
-      //get the forms
-      const charaForm = document.querySelector('#charForm');
-      const getForm = document.querySelector('#getForm');
-      
-      //handle request
-      const addChara = (e) => sendPost(e, charaForm);
-      const getChars = (e) => requestUpdate(e, getForm);
-
-      
-      //event listeners
-      charaForm.addEventListener('submit', addChara);
-      getForm.addEventListener('submit', getChars);
-
-    };
-    
-    window.onload = init;
-    
+  <script type="text/javascript" src="source.js">
   </script>
 </head>
 <body>
   <div id="wrap">
   
+    <h1>Dungeons &amp; Dragons Character Storage</h1>
+    
   <section id="entry">
     <form id="charForm" action="/addChar" method="post">
+      <section class="infoSection">
       <label for="name">Name: </label>
       <input id="nameField" type="text" name="name" />
       
@@ -173,7 +24,9 @@
       
       <label for="class">Class: </label>
       <input id="classField" type="text" name="class" />
+      </section>
       
+      <section class="infoSection">
       <label for="alignmentH">Alignment: </label>
       <select id="alignFieldH" name="alignmentH">
         <option value='Lawful'>Lawful</option>
@@ -185,19 +38,79 @@
         <option value='Neutral'>Neutral</option>
         <option value='Evil'>Evil</option>
       </select>
+      </section>
+      
+      <section class="infoSection">
+        <label for="portrait">Portrait URL: </label>
+        <input id="portraitUrl" type="text" name="portrait" />
+      </section>
+      
+      <section class="infoSection">
+        <label for="strength">STR:</label>
+        <input id="str" type="number" name="strength" value="12" min="0" max="100"/>
+        <label for="dexterity">DEX:</label>
+        <input id="dex" type="number" name="dexterity" value="12" min="0" max="100"/>
+        <label for="constitution">CON:</label>
+        <input id="con" type="number" name="constitution" value="12" min="0" max="100"/>
+        <label for="intelligence">INT:</label>
+        <input id="int" type="number" name="intelligence" value="12" min="0" max="100"/>
+        <label for="wisdom">WIS:</label>
+        <input id="wis" type="number" name="wisdom" value="12" min="0" max="100"/>
+        <label for="charisma">CHA:</label>
+        <input id="cha" type="number" name="charisma" value="12" min="0" max="100"/>
+      </section>
       
       <input type="submit" value="Add Character" />
     </form>
     
+    </section>
+    
+    <section id="refresh">
     <form id="getForm" action="/getChars" method="get">
       <input type="submit" value="Refresh Characters" />
     </form>
-  </section> 
+    </section>
+    
   
+    <div id="content">
+      
+      <!--TEMPLATE
+      <section class="characterPanel">
+        <img class="port" src="https://file.toyhou.se/characters/1583945?1515614466" />
+        <h2>Francesco</h2>
+        <p class="info">Dark Elf Paladin</p>
+        <p class="info">Lawful Good</p>
+        <section class="stats">
+          <p class="stat">STR: 10</p>
+          <p class="stat">DEX: 15</p>
+          <p class="stat">CON: 11</p>
+          <br />
+          <p class="stat">INT: 12</p>
+          <p class="stat">WIS: 12</p>
+          <p class="stat">CHA: 14</p>
+        </section>
+      </section>
+      -->
+      
+    </div> 
   
-  <section id="content">
-  </section> 
-  
+    <div id="consoleStandin">
+    </div>
+    
   </div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

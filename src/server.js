@@ -44,6 +44,8 @@ const onRequest = (request, response) => {
   console.log(request.method);
 
   const parsedURL = url.parse(request.url);
+  const params = query.parse(parsedURL.query);
+
 
   // check request method
   if (request.method === 'GET') {
@@ -54,14 +56,36 @@ const onRequest = (request, response) => {
       case '/styles.css':
         htmlHandler.getStyles(request, response);
         break;
+      case '/source.js':
+        htmlHandler.getScript(request, response);
+        break;
+      case '/defaultPort.png':
+        htmlHandler.getDefaultPortrait(request, response);
+        break;
       case '/getChars':
         jsonHandler.getCharacters(request, response);
+        break;
+      case '/load':
+        if (params) {
+          jsonHandler.edit(request, response, params);
+        }
         break;
       default:
         jsonHandler.notFound(request, response);
     }
   } else if (request.method === 'HEAD') {
-    jsonHandler.notFound(request, response);
+    switch (parsedURL.pathname) {
+      case '/getChars':
+        jsonHandler.getCharactersMeta(request, response);
+        break;
+      case 'load':
+        if (params) {
+          jsonHandler.editMeta(request, response, params);
+        }
+        break;
+      default:
+        jsonHandler.notFoundMeta(request, response);
+    }
   } else if (request.method === 'POST') {
     switch (parsedURL.pathname) {
       case '/addChar':
