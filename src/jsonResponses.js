@@ -39,10 +39,10 @@ const edit = (request, response, params) => {
     inputValues,
   };
 
-  return respondJSON(request, response, 204, responseJSON);
+  return respondJSON(request, response, 201, responseJSON);
 };
 
-const editMeta = (request, response) => respondJSONMeta(request, response, 204);
+const editMeta = (request, response) => respondJSONMeta(request, response, 201);
 
 
 

@@ -280,6 +280,7 @@
       //event listeners
       charaForm.addEventListener('submit', addChara);
       getForm.addEventListener('submit', getChars);
+      
     };
     
     window.onload = init;
