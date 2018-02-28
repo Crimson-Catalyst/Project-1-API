@@ -147,6 +147,7 @@ module.exports = {
   getCharactersMeta,
   handleCharaInput,
   edit,
+  editMeta,
   clientError,
   notFound,
   notFoundMeta,
